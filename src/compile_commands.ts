@@ -50,7 +50,7 @@ class CompileCommand {
 			"-masm=intel",
 			"-o",
 			outFile
-		].concat(this.args);
+        ].concat(this.args); 
 
 		return this.getCommand(args);
 	}
@@ -239,8 +239,8 @@ export class CompileCommands {
 	}
 
 	private static execCompileCommand(compileInfo: CompileInfo) {
-		const command = compileInfo.command.split(" ");
-		const result = child_process.spawnSync(command[0], command.slice(1), {
+        const command = compileInfo.command.split(" ");
+		const result = child_process.spawnSync(command[0], command.slice(1,-1), {
 			cwd: compileInfo.compilationDirectory,
 			encoding: "utf8"
 		});
@@ -252,11 +252,11 @@ export class CompileCommands {
 				? result.output.join("\n")
 				: "";
 
-			window.showErrorMessage(
-				"Cannot compile " + compileInfo.srcUri.path
-			);
+                window.showErrorMessage(
+                    "Cannot compile " + JSON.stringify(command.slice(1,-1)) +""
+                );
 
-			this.errorChannel.clear();
+            this.errorChannel.clear();
 			this.errorChannel.appendLine(compileInfo.command);
 			this.errorChannel.appendLine(error);
 			this.errorChannel.appendLine(
